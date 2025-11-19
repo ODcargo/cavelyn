@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cavelyn Brand Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+<div class="logo">Cave<span>lyn</span></div>
+<nav>
+<ul class="nav-links">
+<li><a href="#home">Home</a></li>
+<li><a href="#products">Products</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+</header>
+<section id="home" class="hero">
+<div class="hero-content">
+<h1>Premium Quality Cavelyn Brand Shop</h1>
+<p>Discover top-quality fashion, accessories, and modern style.</p>
+<a href="#products" class="btn">Shop Now</a>
+</div>
+</section>
+<section id="products" class="products">
+<h2>Featured Products</h2>
+<div class="product-grid">
+<div class="product-card">
+<img src="images/brandshirt.jpg" alt="">
+<h3>Brand Shirt</h3>
+<p class="price">$120.00</p>
+<button class="btn-small">Захиалах</button>
+</div>
+<div class="product-card">
+<img src="images/classicsneakers.jpg" alt="">
+<h3>Classic Sneakers</h3>
+<p class="price">$89.00</p>
+<button class="btn-small">Захиалах</button>
+</div>
+<div class="product-card">
+<img src="images/luxurybackpack.jpg" alt="">
+<h3>Luxury Backpack</h3>
+<p class="price">$150.00</p>
+<button class="btn-small">Захиалах</button>
+</div>
+</div>
+</section>
+<section id="about" class="about">
+<h2>About Our Brand</h2>
+<p>Cavelyn delivers premium-quality fashion and global designer products. Our mission is to bring modern, elegant style and professional design to your everyday life.</p>
+</section>
+<section id="contact" class="contact">
+<h2 id="contactTrigger">Contact Us</h2>
+<p>Questions? We'd love to hear from you.</p>
+<div class="contact-info">
+<p><strong>Phone:</strong> +976 96334457</p>
+<p><strong>Email:</strong> temkaa4554@gmail.com</p>
+</div>
+</section>
+<footer class="footer">
+<p>© 2025 Cavelyn Brand Shop. All Rights Reserved.</p>
+</footer>
+<div class="order-popup" id="orderPopup">
+<div class="order-box">
+<h2>Захиалга хийх</h2>
+<p id="productName"></p>
+<label>Утасны дугаар:</label>
+<input type="text" id="phoneNumber">
+<label>Гэрийн хаяг:</label>
+<input type="text" id="address">
+<button onclick="submitOrder()">Илгээх</button>
+<button class="close-btn" onclick="closePopup()">Хаах</button>
+</div>
+</div>
+<div class="admin-popup" id="adminPopup">
+<div class="admin-box">
+<h3>Нууц үг оруулна уу</h3>
+<input type="password" id="adminPass">
+<button onclick="checkPassword()">Нэвтрэх</button>
+<p id="passMessage" style="color:red;"></p>
+</div>
+</div>
+<div class="order-list" id="orderList">
+<h2>Бүх захиалгууд</h2>
+<div id="ordersContainer"></div>
+<button onclick="closeOrders()">Хаах</button>
+</div>
+<script>
+let selectedProduct="";
+document.querySelectorAll(".btn-small").forEach((btn,i)=>{
+btn.addEventListener("click",()=>{
+selectedProduct=document.querySelectorAll(".product-card h3")[i].innerText;
+document.getElementById("productName").innerText="Бараа: "+selectedProduct;
+document.getElementById("orderPopup").style.display="flex";
+});
+});
+function closePopup(){document.getElementById("orderPopup").style.display="none";}
+function getFullTime(){let d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0");}
+function submitOrder(){let phone=document.getElementById("phoneNumber").value;let addr=document.getElementById("address").value;if(!phone||!addr)return alert("Бүх хэсгийг бөглөнө үү!");let order={product:selectedProduct,phone:phone,address:addr,time:getFullTime()};let orders=JSON.parse(localStorage.getItem("orders"))||[];orders.push(order);localStorage.setItem("orders",JSON.stringify(orders));alert("Захиалга илгээгдлээ!");closePopup();}
+let clickCount=0;
+document.getElementById("contactTrigger").addEventListener("click",()=>{clickCount++;if(clickCount>=40){clickCount=0;openAdminPassword();}});
+function openAdminPassword(){document.getElementById("adminPopup").style.display="flex";}
+function checkPassword(){let pass=document.getElementById("adminPass").value;if(pass==="Zk96334457"){document.getElementById("adminPopup").style.display="none";showOrders();}else{document.getElementById("passMessage").innerText="Wrong password!";}}
+function showOrders(){let orders=JSON.parse(localStorage.getItem("orders"))||[];let box=document.getElementById("ordersContainer");box.innerHTML="";orders.forEach((o,index)=>{box.innerHTML+=`<div style='padding:10px;border-bottom:1px solid #ddd;'><p><b>Бараа:</b> ${o.product}</p><p><b>Утас:</b> ${o.phone}</p><p><b>Хаяг:</b> ${o.address}</p><p><b>Огноо:</b> ${o.time}</p><button onclick="confirmDelete(${index})" style="margin-top:10px;padding:6px 12px;background:red;color:white;border:none;border-radius:5px;cursor:pointer;">Delete</button></div>`;});document.getElementById("orderList").style.display="flex";}
+function confirmDelete(i){let box=document.createElement("div");box.style.position="fixed";box.style.top="0";box.style.left="0";box.style.width="100%";box.style.height="100%";box.style.background="rgba(0,0,0,0.6)";box.style.display="flex";box.style.justifyContent="center";box.style.alignItems="center";box.innerHTML=`<div style='background:white;padding:20px;border-radius:10px;text-align:center;width:280px;'><h3>Are you sure?</h3><div style='margin-top:15px; display:flex; justify-content:space-around;'><button id="yesBtn" style="padding:8px 20px;background:#28a745;color:white;border:none;border-radius:6px;cursor:pointer;">Yes</button><button id="noBtn" style="padding:8px 20px;background:#6c757d;color:white;border:none;border-radius:6px;cursor:pointer;">No</button></div></div>`;document.body.appendChild(box);document.getElementById("yesBtn").onclick=()=>{deleteOrder(i);document.body.removeChild(box);};document.getElementById("noBtn").onclick=()=>{document.body.removeChild(box);};}
+function deleteOrder(i){let orders=JSON.parse(localStorage.getItem("orders"))||[];orders.splice(i,1);localStorage.setItem("orders",JSON.stringify(orders));showOrders();}
+function closeOrders(){document.getElementById("orderList").style.display="none";}
+</script>
+</body>
+</html>
